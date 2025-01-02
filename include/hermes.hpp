@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <iostream>
-#include <netinet/in.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <sstream>
+#include <string>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
 
