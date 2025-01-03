@@ -2,18 +2,9 @@
 
 int main()
 {
-  int socket_server = socket(AF_INET, SOCK_STREAM, 0);
-
-  struct sockaddr_in server_address;
-  server_address.sin_port = htons(8000);
-  server_address.sin_family = AF_INET;
-  server_address.sin_addr.s_addr = INADDR_ANY;
-
-  bind(socket_server, (struct sockaddr *)&server_address, sizeof(server_address));
-
-  listen(socket_server, 5);
-  printf("server listning on port 8000\n");
-
+  server *app = new server();
+  int socket_server = app->Listen(8000);
+  std::cout << socket_server;
   while (true) {
     char buffer[1024];
     int acceptSocket = accept(socket_server, NULL, NULL);
