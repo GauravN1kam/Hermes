@@ -7,110 +7,61 @@
 
 int main()
 {
-    WSADATA wsaData;
-
     int iResult;
-    struct addrinfo *result = NULL, *ptr= NULL, hints;
-
-    ZeroMemory(&hints, sizeof(hints));
-
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-    hints.ai_flags = AI_PASSIVE;
-    
-    iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-    if (iResult != 0) {
-        printf("WSAStartup failed with error: %d\n", iResult);
-        return 1;
-    }
-    iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
-    if(iResult != 0){
-        printf("WSAStartup failed\n", iResult);
-        WSACleanup();
-        return 1;
-    }
-    SOCKET ListenSocket = INVALID_SOCKET;
-
-    ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-
-
-    if (ListenSocket == INVALID_SOCKET) {
-        printf("Error at socket(): %ld\n", WSAGetLastError());
-        freeaddrinfo(result);
-        WSACleanup();
-        return 1;
-    }
-    iResult = bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
-
-    if (iResult == SOCKET_ERROR) {
-        printf("bind failed with error: %d\n", WSAGetLastError());
-        WSACleanup();
-        return 1;
-    }
-
-    freeaddrinfo(result);
-
-    if (listen(ListenSocket, SOMAXCONN) == SOCKET_ERROR) {
-        printf("Listen failed ith error %d\n", WSAGetLastError());
-        closesocket(ListenSocket);
-        WSACleanup();
-        return 1;
-    }
+    std::string port = "27015";
+    Server *server = new Server();
+    SOCKET ListenSocket = server->Listen(port);
     
     char recvbuf[DEFAULT_BUFLEN];
     int iSendResult;
     int recvbuflen = DEFAULT_BUFLEN;
 
 
-    while (1) { 
-        do{
+    while (1) {
+        SOCKET ClientSocket;
 
-            SOCKET ClientSocket;
+        ClientSocket = INVALID_SOCKET;
 
-            ClientSocket = INVALID_SOCKET;
+        ClientSocket = accept(ListenSocket, NULL, NULL);
+        if(ClientSocket == INVALID_SOCKET){
+            printf("accept failed ith error %d\n", WSAGetLastError());
+            closesocket(ListenSocket);
+            WSACleanup();
+            return 1;
+        }
+        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+        if(iResult > 0){
+            printf("Bytes received %d\n",iResult);
+            std::stringstream responce;
+            responce << "HTTP/1.1 200 OK\r\n";
+            responce << "Content-Type: text/html\r\n\r\n";
+            responce << "<h1>Hello world</h1>";
 
-            ClientSocket = accept(ListenSocket, NULL, NULL);
-            if(ClientSocket == INVALID_SOCKET){
-                printf("accept failed ith error %d\n", WSAGetLastError());
-                closesocket(ListenSocket);
+
+            iSendResult = send(ClientSocket, responce.str().c_str(), responce.str().size(), 0);
+            
+            if(ClientSocket == SOCKET_ERROR){
+                printf("send failed ith error %d\n", WSAGetLastError());
+                closesocket(ClientSocket);
                 WSACleanup();
                 return 1;
             }
-            iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-            if(iResult > 0){
-                printf("Bytes received %d\n",iResult);
-                std::stringstream responce;
-                responce << "HTTP/1.1 200 OK\r\n";
-                responce << "Content-Type: text/html\r\n\r\n";
-                responce << "<h1>Hello world</h1>";
-
-
-                iSendResult = send(ClientSocket, responce.str().c_str(), iResult, 0);
-
-                if(ClientSocket == SOCKET_ERROR){
-                    printf("send failed ith error %d\n", WSAGetLastError());
-                    closesocket(ClientSocket);
-                    WSACleanup();
-                    return 1;
-                }
-                else {
-                    closesocket(ClientSocket);
-                }
-                printf("Bytes send: %d\n", iSendResult);
-
-            } else if(iResult == 0){
-                printf("Connection Closing...\n");
+            else {
+                closesocket(ClientSocket);
             }
-            else{
-                printf("recv failed: %d\n", WSAGetLastError());
-                WSACleanup();
-                return 1;
-            }
-        }while(iResult > 0);
+            printf("Bytes send: %d\n", iSendResult);
+
+        } else if(iResult == 0){
+            printf("Connection Closing...\n");
+            closesocket(ClientSocket);
+        }
+        else{
+            printf("recv failed: %d\n", WSAGetLastError());
+            WSACleanup();
+            return 1;
+        }
     }
 
-    closesocket(ClientSocket);
     WSACleanup();
     return 0;
 }
