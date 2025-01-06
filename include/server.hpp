@@ -7,7 +7,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-class server{
+
+class Server {
 public:
-  int Listen(int port);
-};
+  Server();
+  int Listen(int port); 
+};  

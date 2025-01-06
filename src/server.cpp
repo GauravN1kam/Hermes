@@ -1,6 +1,11 @@
 #include "../include/server.hpp"
 
-int server::Listen(int port)
+
+Server::Server(){
+
+}
+
+int Server::Listen(int port)
 {
     int socket_server = socket(AF_INET, SOCK_STREAM, 0);
     if (socket_server < 0) {

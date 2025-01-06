@@ -1,8 +1,8 @@
 #include "../include/hermes.hpp"
-
+#include "../include/server.hpp"
 int main()
 {
-  server *app = new server();
+  Server *app = new Server();
   int socket_server = app->Listen(8000);
   std::cout << socket_server;
   while (true) {
