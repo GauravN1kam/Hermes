@@ -10,7 +10,10 @@ int main()
     int iResult;
     std::string port = "27015";
     Server *server = new Server();
-    SOCKET ListenSocket = server->Listen(port);
+    HermesFlags flag;
+    flag = Passive;
+    Protocol protocol = v4;
+    SOCKET ListenSocket = server->Listen(port, flag, protocol);
     
     char recvbuf[DEFAULT_BUFLEN];
     int iSendResult;
