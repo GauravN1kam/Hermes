@@ -1,11 +1,12 @@
-#include "../include/server.h"
-#include <string>
+#include "../include/server.hpp"
+
+
 
 //Server::Server(){}
 
 SOCKET Server::Listen(std::string port){
-    WSADATA wsaData;
-
+     WSADATA wsaData;
+    
     int iResult;
     struct addrinfo *result = NULL, *ptr= NULL, hints;
 

@@ -8,4 +8,11 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
-#include "server.hpp"
+class Server{
+    public:
+        SOCKET __cdecl Listen(std::string port);
+        int __cdecl get() const;
+        int  __cdecl post() const;
+        int  __cdecl del() const;
+};
+
