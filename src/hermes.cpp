@@ -1,4 +1,5 @@
 #include "../include/hermes.hpp"
+#include "../include/request.hpp"
 
 
 #pragma comment(lib, "Ws2_32.lib")
@@ -13,13 +14,12 @@ int main()
     HermesFlags flag;
     flag = Passive;
     Protocol protocol = v4;
-    SOCKET ListenSocket = server->Listen(port, flag, protocol);
-    
+    SOCKET ListenSocket = server->Listen(port, flag, protocol); 
     char recvbuf[DEFAULT_BUFLEN];
     int iSendResult;
     int recvbuflen = DEFAULT_BUFLEN;
-
-
+    std::cout<<parse(5, port);
+    /*Request req = new Request();*/
     while (1) {
         SOCKET ClientSocket;
 
@@ -33,7 +33,9 @@ int main()
             return 1;
         }
         iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        if(iResult > 0){
+        
+	/*req = new Request(recvbuf);*/
+	if(iResult > 0){
             printf("Bytes received %d\n",iResult);
             std::stringstream responce;
             responce << "HTTP/1.1 200 OK\r\n";

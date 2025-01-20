@@ -9,3 +9,6 @@
 #include <ws2tcpip.h>
 #include <windows.h>
 #include "server.hpp"
+#include "json_Parser.hpp"
+
+int parse(int a, std::string json);

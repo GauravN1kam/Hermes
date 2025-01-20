@@ -163,3 +163,8 @@ SOCKET Server::Listen(std::string port, HermesFlags flag, Protocol protocol){
     }
     return ListenSocket; 
 }
+
+std::string Server::get(){
+    std::string name = "";
+    return name;
+}

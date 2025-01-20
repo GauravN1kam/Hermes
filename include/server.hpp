@@ -25,13 +25,13 @@ enum Protocol{
 };
 
 class Server{
-
     public:
         SOCKET __cdecl Listen(std::string port); 
         SOCKET __cdecl Listen(std::string port, HermesFlags flag);
         SOCKET __cdecl Listen(std::string port, HermesFlags flag, Protocol protocol);
-        int __cdecl get() const;
-        int  __cdecl post() const;
-        int  __cdecl del() const;
+        std::string __cdecl get() ;
+        std::string  __cdecl post() const;
+        std::string  __cdecl del() const;
 };
+
 
