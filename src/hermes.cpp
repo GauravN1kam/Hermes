@@ -12,9 +12,8 @@ int main() {
       responce << "HTTP/1.1 200 OK\r\n";
       responce << "Content-Type: text/html\r\n\r\n";
       responce << "<h1>Hello World</h1>\r\n\r\n";
-      responce << "<h2>My name is Gaurav</h2>"
 
-          int sendcode =
+      int sendcode =
           send(acceptSocket, responce.str().c_str(), responce.str().size(), 0);
       close(acceptSocket);
     }
