@@ -11,7 +11,8 @@ int main() {
       std::stringstream responce;
       responce << "HTTP/1.1 200 OK\r\n";
       responce << "Content-Type: text/html\r\n\r\n";
-      responce << "<h1>Hello World</h1>\r\n\r\n";
+      responce << "<h1>Hello World</h1>\r\n";
+      responce << "<h2>This web page is created from c++</h2>\r\n\r\n";
 
       int sendcode =
           send(acceptSocket, responce.str().c_str(), responce.str().size(), 0);
